@@ -33,7 +33,6 @@ app.get('/:file', async (req, res) => {
     db.set(sliced, userVisits)
     todaysViews[sliced] ? todaysViews[sliced]++  : todaysViews[sliced] = 1
   }
-  console.log(ip)
 
   await create(userData, userVisits.length)
 
