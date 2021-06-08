@@ -25,16 +25,13 @@ app.get('/:file', async (req, res) => {
   let sliced = (req.params.file).slice(0, -4)
   let userData = await Anilist.user.profile(sliced).catch(err => {return Error() })
 
-  let userVisits = await db.get(sliced) || []
-  let ip = req.connection.remoteAddress.split(`:`).pop();
-
-  if(!userVisits.includes(ip)){
-    userVisits.push(ip)
+  let userVisits = await db.get(sliced) || 0
+    userVisits++
     db.set(sliced, userVisits)
     todaysViews[sliced] ? todaysViews[sliced]++  : todaysViews[sliced] = 1
-  }
+  
 
-  await create(userData, userVisits.length)
+  await create(userData, userVisits)
 
   let p = path.join(__dirname, 'public/'+ sliced + '.png');
   res.sendFile(p)
